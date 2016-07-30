@@ -1,0 +1,8 @@
+defmodule AmqpRpcTest do
+  use ExUnit.Case
+  doctest AmqpRpc
+
+  test "the truth" do
+    assert 1 + 1 == 2
+  end
+end
