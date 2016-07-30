@@ -1,4 +1,4 @@
-# Amqp Rpc Client/Server templates
+# AMQP RPC Client/Server templates
 
 **Warning!** POC quality!
 
@@ -60,7 +60,7 @@ end
 
 ## Installation
 
-[Available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+[Available in Hex](https://hex.pm/packages/amqp_rpc), the package can be installed as:
 
   1. Add `amqp_rpc` to your list of dependencies in `mix.exs`:
 
