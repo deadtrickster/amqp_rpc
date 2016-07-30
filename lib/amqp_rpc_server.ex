@@ -13,9 +13,7 @@ defmodule AMQP.RPC.Server do
     |> Atom.to_string
     |> String.split(".")
     |> List.last
-    |> String.replace(~r/[A-Z]/, "_\\g{0}")
-    |> String.slice(1..-1)
-    |> String.downcase
+    |> Macro.underscore
   end
 
   defp normalize_commands(commands) do

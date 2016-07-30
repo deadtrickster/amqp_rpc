@@ -15,9 +15,7 @@ defmodule AMQP.RPC.Client do
     |> Atom.to_string
     |> String.split(".")
     |> List.last
-    |> String.replace(~r/[A-Z]/, "_\\g{0}")
-    |> String.slice(1..-1)
-    |> String.downcase
+    |> Macro.underscore
   end
 
   defp default_fuse_name(target_module) do
