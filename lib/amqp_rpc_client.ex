@@ -105,7 +105,7 @@ defmodule AMQP.RPC.Client do
             {:noreply, %{channel: channel,
                          reply_queue: reply_queue,
                          correlation_id: correlation_id,
-                         continuations: Map.delete(continuations, correlation_id)}}
+                         continuations: Map.delete(continuations, deliver_correlation_id)}}
           end
         end
       end
