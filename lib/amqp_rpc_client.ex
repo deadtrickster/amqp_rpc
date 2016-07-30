@@ -32,7 +32,7 @@ defmodule AMQP.RPC.Client do
     name = Access.get(opts, :name, target_module)
     reconnects = Access.get(opts, :reconnects, 6)
     reconnect_interval = Access.get(opts, :reconnect_interval, 60000)
-    connection_string = Access.get(opts, :connetion_string, "amqp://localhost")
+    connection_string = Access.get(opts, :connection_string, "amqp://localhost")
     cleanup_interval = Access.get(opts, :cleanup_interval, 60000)
 
     quote do
@@ -43,6 +43,20 @@ defmodule AMQP.RPC.Client do
       @timeout unquote(timeout)
       @exchange unquote(exchange)
       @queue unquote(queue)
+
+      defp connection_string do
+        unquote(case connection_string do
+                  {app, key} ->
+                    quote do
+                      {:ok, connection_string} = :application.get_env(unquote(app), unquote(key))
+                      connection_string
+                    end
+                  {:system, name} ->
+                    System.get_env(name)
+                  _ ->
+                    connection_string
+                end)
+      end
 
       def start_link do
         GenServer.start_link(__MODULE__, [], name: unquote(name))
@@ -56,7 +70,7 @@ defmodule AMQP.RPC.Client do
             :fuse.install(unquote(fuse_name), unquote(Macro.escape(fuse_opts)))
           end
         end)
-        Logger.debug("#{unquote(name)}: connecting to RabbitMQ using '#{unquote(connection_string)}'")
+        Logger.debug("#{unquote(name)}: connecting to RabbitMQ using '#{connection_string}'")
         resp = try_to_connect()
         if resp do
           Logger.debug("#{unquote(name)}: connected to RabbitMQ")
@@ -182,7 +196,7 @@ defmodule AMQP.RPC.Client do
       end
 
       defp try_to_connect do
-        case Connection.open(unquote(connection_string)) do
+        case Connection.open(connection_string) do
           {:ok, conn} ->
 
             Process.monitor(conn.pid)
