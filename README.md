@@ -60,13 +60,13 @@ end
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+[Available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add `amqp_rpc` to your list of dependencies in `mix.exs`:
 
     ```elixir
     def deps do
-      [{:amqp_rpc, "~> 0.1.0"}]
+      [{:amqp_rpc, "~> 0.0.1"}]
     end
     ```
 
