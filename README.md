@@ -4,7 +4,7 @@
 
 ## Goals
  - Reduce boilerplate
- - Reconnects
+ - Handle reconnects
  - Messages housekeeping 
  - Logging
  - Monitoring
@@ -13,7 +13,7 @@
 
 ## Example
 
-Below is 'classic' RPC example from (RabbitMQ tutorials)[http://www.rabbitmq.com/tutorials/tutorial-six-elixir.html]
+Below is 'classic' RPC example from [RabbitMQ tutorials](http://www.rabbitmq.com/tutorials/tutorial-six-elixir.html)
 rewritten using amqp_rpc:
 
 Client:
