@@ -46,13 +46,13 @@ defmodule AMQP.RPC.Client do
 
       defp connection_string do
         unquote(case connection_string do
+                  {:system, name} ->
+                    System.get_env(name)
                   {app, key} ->
                     quote do
                       {:ok, connection_string} = :application.get_env(unquote(app), unquote(key))
                       connection_string
                     end
-                  {:system, name} ->
-                    System.get_env(name)
                   _ ->
                     connection_string
                 end)
@@ -106,10 +106,11 @@ defmodule AMQP.RPC.Client do
         {:noreply, state}
       end
 
-      def handle_info({:basic_deliver, sdata, %{correlation_id: deliver_correlation_id}}, %{channel: channel,
-                                                                                            continuations: continuations,
-                                                                                            correlation_id: correlation_id,
-                                                                                            reply_queue: reply_queue}) do
+      def handle_info({:basic_deliver, sdata, %{correlation_id: deliver_correlation_id}}, state) do
+        %{channel: channel,
+          continuations: continuations,
+          correlation_id: correlation_id,
+          reply_queue: reply_queue} = state
         cont = Map.get(continuations, deliver_correlation_id, false)
         if cont do
           {from, timeout} = cont
@@ -120,7 +121,11 @@ defmodule AMQP.RPC.Client do
                          reply_queue: reply_queue,
                          correlation_id: correlation_id,
                          continuations: Map.delete(continuations, deliver_correlation_id)}}
+          else
+            {:noreply, state}
           end
+        else
+          {:noreply, state}
         end
       end
 
@@ -228,7 +233,7 @@ defmodule AMQP.RPC.Client do
               :ok ->
                 real_rpc(command, timeout)
               :blown ->
-                :timeout
+                :blown
             end
           end
         else
