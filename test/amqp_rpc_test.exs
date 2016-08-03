@@ -9,6 +9,8 @@ defmodule AmqpRpcTest do
   test "Basic all-in-one test" do
     {:ok, client_pid} = Fibonacci.start_link
     assert Fibonacci.fib(5) == :timeout
+
+    # melt fuse
     spawn fn -> Fibonacci.fib(5) end
     spawn fn -> Fibonacci.fib(5) end
     spawn fn -> Fibonacci.fib(5) end
@@ -18,6 +20,12 @@ defmodule AmqpRpcTest do
     :timer.sleep(61000)
 
     {:ok, server_pid} = FibonacciServer.start_link
+    :timer.sleep(1000)
+
+    # we didn't receive expired continuations
+    assert :erlang.process_info(self, :messages) == {:messages, []}
+
+    # rpc calls should still work
     assert Fibonacci.fib(5) == 5
 
     :erlang.exit(client_pid, :ok)
