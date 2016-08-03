@@ -1,4 +1,4 @@
-# AMQP RPC Client/Server templates
+# AMQP RPC Client/Server templates [![Build Status](https://travis-ci.org/deadtrickster/amqp_rpc.svg?branch=master)](https://travis-ci.org/deadtrickster/amqp_rpc) [![Hex.pm](https://img.shields.io/hexpm/v/amqp_rpc.svg?maxAge=2592000?style=plastic)](https://hex.pm/packages/amqp_rpc) 
 
 **Warning!** POC quality!
 
