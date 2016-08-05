@@ -11,6 +11,14 @@
  - Use [fuse](https://github.com/jlouis/fuse)
  - Content negotiation
 
+### Fuse
+[Fuse](https://github.com/jlouis/fuse) helps reduce latency when something goes wrong with RabbitMQ or RPC server side by breaking circuit and returning immideately. Fuse can be configured via `fuse_name` and `fuse_opts` keys. We trying to maintain sensible default for those. 
+
+### Monitoring/Instrumenting
+Clients can be instrumented using built-in metrics plugins. Currenly [implemented](https://github.com/deadtrickster/amqp_rpc/blob/master/lib/amqp/rpc/stat/plugin.ex)
+ - ETS-backed plugin (default)
+ - [Prometheus](https://github.com/deadtrickster/prometheus.erl) plugin.
+
 ## Example
 
 Below is 'classic' RPC example from [RabbitMQ tutorials](http://www.rabbitmq.com/tutorials/tutorial-six-elixir.html)
