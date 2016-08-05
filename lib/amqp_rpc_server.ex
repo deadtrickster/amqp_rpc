@@ -51,13 +51,13 @@ defmodule AMQP.RPC.Server do
 
       defp connection_string do
         unquote(case connection_string do
+                  {:system, name} ->
+                    System.get_env(name)
                   {app, key} ->
                     quote do
                       {:ok, connection_string} = :application.get_env(unquote(app), unquote(key))
                       connection_string
                     end
-                  {:system, name} ->
-                    System.get_env(name)
                   _ ->
                     connection_string
                 end)
