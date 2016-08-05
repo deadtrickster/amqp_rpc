@@ -3,7 +3,7 @@ defmodule AmqpRpc.Mixfile do
 
   def project do
     [app: :amqp_rpc,
-     version: "0.0.4",
+     version: "0.0.5",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -53,6 +53,7 @@ defmodule AmqpRpc.Mixfile do
     [{:amqp, "~> 0.1.4"},
      {:poison, "~> 2.2"},
      {:fuse, "~> 2.4"},
-     {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true}]
+     {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
+     {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 end
