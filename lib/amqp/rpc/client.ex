@@ -245,14 +245,14 @@ defmodule AMQP.RPC.Client do
           quote do
             start_time = AMQP.RPC.Stat.Plugin.current_time
           end
-	end)
+        end)
         response = maybe_fused_rpc({command, headers}, timeout)
         unquote(if metric_name do
           quote do
             time_diff = AMQP.RPC.Stat.Plugin.time_from(start_time)
             unquote(metric_plugin).instrument_request(unquote(metric_name), command.command_name, response, time_diff)
           end
-	end)
+        end)
         response
       end
 
@@ -307,7 +307,7 @@ defmodule AMQP.RPC.Client do
       end
 
       defp cleanup_timedout_continuations(state) do
-        if state != :not_connected do
+        if state != :not_connected and state != nil do
           %{continuations: old_continuations} = state
           clist = Map.to_list(old_continuations)
           new_continuations = clist |> Enum.reject(fn({_, {_, timeout}}) -> continuation_timed_out timeout end)
