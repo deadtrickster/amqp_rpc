@@ -22,11 +22,18 @@ defmodule AMQP.RPC.Client do
     default_name_prefix(target_module) <> "_fuse"
   end
 
+  defp default_metric_name(target_module) do
+    default_name_prefix(target_module) <> "_client"
+  end
+
   defmacro __using__(opts) do
     target_module = __CALLER__.module
     timeout = Access.get(opts, :timeout, 5000)
     fuse_name = Access.get(opts, :fuse_name, default_fuse_name(target_module))
     fuse_opts = Access.get(opts, :fuse_opts, {{:standard, 2, 10000}, {:reset, 60000}})
+    metric_name = Access.get(opts, :metric_name, default_metric_name(target_module))
+    metric_plugin = Access.get(opts, :metric_plugin, AMQP.RPC.Stat.Ets)
+    metric_plugin_options = Access.get(opts, :metric_plugin_options, nil)
     {:ok, exchange} = Access.fetch(opts, :exchange)
     {:ok, queue} = Access.fetch(opts, :queue)
     name = Access.get(opts, :name, target_module)
@@ -68,6 +75,12 @@ defmodule AMQP.RPC.Client do
           quote do
             Logger.debug("#{unquote(name)}: initializing fuse #{unquote(fuse_name)}")
             :fuse.install(unquote(fuse_name), unquote(Macro.escape(fuse_opts)))
+          end
+        end)
+        unquote(if metric_name do
+          quote do
+            Logger.debug("#{unquote(name)}: initializing stat plugin #{unquote(metric_plugin)} with name #{unquote(metric_name)}")
+            unquote(metric_plugin).init(unquote(metric_name), unquote(metric_plugin_options))
           end
         end)
         Logger.debug("#{unquote(name)}: connecting to RabbitMQ using '#{connection_string}'")
@@ -148,7 +161,7 @@ defmodule AMQP.RPC.Client do
       end
 
       def handle_call({{:call, command}, timeout}, from, state) do
-        {command, headers} = normalize_command(command)
+        {command, headers} = command
         if state == :not_connected do
           {:reply, :not_connected}
         else
@@ -227,6 +240,23 @@ defmodule AMQP.RPC.Client do
       end
 
       defp rpc(command, timeout) do
+        {command, headers} = normalize_command(command)
+        unquote(if metric_name do
+          quote do
+            start_time = AMQP.RPC.Stat.Plugin.current_time
+          end
+	end)
+        response = maybe_fused_rpc({command, headers}, timeout)
+        unquote(if metric_name do
+          quote do
+            time_diff = AMQP.RPC.Stat.Plugin.time_from(start_time)
+            unquote(metric_plugin).instrument_request(unquote(metric_name), command.command_name, response, time_diff)
+          end
+	end)
+        response
+      end
+
+      defp maybe_fused_rpc(command, timeout) do
         unquote(if fuse_opts do
           quote do
             case :fuse.ask(unquote(fuse_name), :sync) do

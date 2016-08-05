@@ -17,6 +17,10 @@ defmodule AmqpRpcTest do
 
     :timer.sleep(6000)
     assert Fibonacci.fib(5) == :blown
+    counters = AMQP.RPC.Stat.Ets.counters("fibonacci_client")
+    assert counters[:timeout] == 4
+    assert counters[:blown] == 1
+    assert counters[:ok] == 0
     :timer.sleep(61000)
 
     {:ok, server_pid} = FibonacciServer.start_link
@@ -28,6 +32,10 @@ defmodule AmqpRpcTest do
     # rpc calls should still work
     assert Fibonacci.fib(5) == 5
 
+    counters = AMQP.RPC.Stat.Ets.counters("fibonacci_client")
+    assert counters[:timeout] == 4
+    assert counters[:blown] == 1
+    assert counters[:ok] == 1
     :erlang.exit(client_pid, :ok)
     :erlang.exit(server_pid, :ok)
   end
