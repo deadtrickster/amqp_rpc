@@ -74,7 +74,7 @@ end
 
     ```elixir
     def deps do
-      [{:amqp_rpc, "~> 0.0.4"}]
+      [{:amqp_rpc, "~> 0.0.7"}]
     end
     ```
 
