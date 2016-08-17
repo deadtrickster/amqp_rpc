@@ -14,6 +14,8 @@ defmodule AMQP.RPC.Stat.Prometheus do
 
   defp normalize_result(:blown), do: :blown
   defp normalize_result(:timeout), do: :timeout
+  defp normalize_result(:not_connected), do: :not_connected
+  defp normalize_result(:connection_lost), do: :connection_lost
   defp normalize_result(_), do: :ok
 
 end

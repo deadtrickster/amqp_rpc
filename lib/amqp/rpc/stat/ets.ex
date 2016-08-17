@@ -25,5 +25,7 @@ defmodule AMQP.RPC.Stat.Ets do
 
   defp metric(name, :blown), do: {name, :blown}
   defp metric(name, :timeout), do: {name, :timeout}
+  defp metric(name, :not_connected), do: {:name, :not_connected}
+  defp metric(name, :connection_lost), do: {:name, :connection_lost}
   defp metric(name, _), do: {name, :ok}
 end
