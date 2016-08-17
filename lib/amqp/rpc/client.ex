@@ -154,7 +154,7 @@ defmodule AMQP.RPC.Client do
 
       def handle_info({:DOWN, _, :process, _pid, _reason}, state) do
         Logger.warn("#{unquote(name)}: connection to RabbitMQ lost, cleaning continuations.")
-        fail_all_continuations(state, :not_connected)
+        fail_all_continuations(state, :connection_lost)
         Logger.warn("#{unquote(name)}: connection to RabbitMQ lost, reconnecting.")
         new_state = connect(1, :not_connected)
         {:noreply, new_state}
