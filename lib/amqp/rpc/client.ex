@@ -51,7 +51,7 @@ defmodule AMQP.RPC.Client do
       @exchange unquote(exchange)
       @queue unquote(queue)
 
-      defp connection_string do
+      defp connection_string() do
         unquote(case connection_string do
                   {:system, name} ->
                     System.get_env(name)
@@ -69,7 +69,7 @@ defmodule AMQP.RPC.Client do
         start_link
       end
 
-      def start_link do
+      def start_link() do
         GenServer.start_link(__MODULE__, [], name: unquote(name))
       end
 
