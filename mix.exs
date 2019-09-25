@@ -3,8 +3,8 @@ defmodule AmqpRpc.Mixfile do
 
   def project do
     [app: :amqp_rpc,
-     version: "0.0.8",
-     elixir: "~> 1.3",
+     version: "0.0.9",
+     elixir: "~> 1.9",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
