@@ -35,7 +35,7 @@ defmodule AMQP.RPC.Server do
     name = Access.get(opts, :name, target_module)
     reconnects = Access.get(opts, :reconnects, 6)
     reconnect_interval = Access.get(opts, :reconnect_interval, 60000)
-    connection_string = Access.get(opts, :connetion_string, "amqp://localhost")
+    connection_string = Access.get(opts, :connection_string, "amqp://localhost")
     {:ok, commands} = Access.fetch(opts, :commands)
     {:ok, exchange} = Access.fetch(opts, :exchange)
     {:ok, queue} = Access.fetch(opts, :queue)
