@@ -65,6 +65,10 @@ defmodule AMQP.RPC.Client do
                 end)
       end
 
+      def start_link(_) do
+        start_link
+      end
+
       def start_link do
         GenServer.start_link(__MODULE__, [], name: unquote(name))
       end
