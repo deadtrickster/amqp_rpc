@@ -35,7 +35,7 @@ defmodule AmqpRpc.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger,                   
+    [applications: [:logger,
                     :amqp,
                     :fuse]]
   end
@@ -50,10 +50,10 @@ defmodule AmqpRpc.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:amqp, "~> 0.1.4"},
-     {:poison, "~> 2.2"},
-     {:fuse, "~> 2.4"},
-     {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
-     {:ex_doc, ">= 0.0.0", only: :dev}]
+    [{:amqp, "~> 1.3.1"},
+     {:poison, "~> 4.0.1"},
+     {:fuse, "~> 2.4.2"},
+     #{:amqp_client, "~> 3.7.11"},
+     {:ex_doc, ">= 0.21.2", only: :dev}]
   end
 end
